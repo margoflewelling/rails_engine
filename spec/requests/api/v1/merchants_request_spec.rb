@@ -35,4 +35,16 @@ describe "Merchants API" do
     expect{Merchant.find(merchant.id)}.to raise_error(ActiveRecord::RecordNotFound)
   end
 
+  it "can update a merchant" do
+    merchant = create(:merchant)
+    original_name = merchant.name
+    merchant_params = {name: "Izzy's IceCream"}
+    put "/api/v1/merchants/#{merchant.id}", params: {merchant: merchant_params}
+    updated = Merchant.find_by(id: merchant.id)
+    expect(response).to be_successful
+    expect(updated.name).to_not eq(original_name)
+    expect(updated.name).to eq("Izzy's IceCream")
+  end
+  
+
 end

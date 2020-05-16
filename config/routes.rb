@@ -7,6 +7,7 @@ namespace :api do
       get ':id', to: 'search#show'
       post '', to: 'merchants#create'
       delete ':id', to: 'merchants#destroy'
+      put ':id', to: 'merchants#update'
    end
   end
 end
