@@ -1,6 +1,7 @@
 require_relative 'boot'
 
 require "rails"
+
 # Pick the frameworks you want:
 require "active_model/railtie"
 require "active_job/railtie"
@@ -38,6 +39,6 @@ module RailsEngine
         resource '*', headers: :any, methods: [:get, :post, :options]
       end
     end
-    
+
   end
 end
