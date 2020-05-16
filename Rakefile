@@ -4,4 +4,4 @@
 require_relative 'config/application'
 require 'rake'
 
-Rails.application.load_tasks
+RailsEngine::Application.load_tasks

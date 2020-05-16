@@ -1,7 +1,5 @@
 FactoryBot.define do
   factory :merchant do
-    name { "MyString" }
-    created_at { "MyString" }
-    updated_at { "MyString" }
+    name { Faker::Name.name }
   end
 end
