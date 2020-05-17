@@ -5,6 +5,7 @@ namespace :api do
 
     namespace :merchants do
       get '', to: 'merchants#index'
+      get 'find', to: 'search#find'
       get ':id', to: 'search#show'
       post '', to: 'merchants#create'
       delete ':id', to: 'merchants#destroy'

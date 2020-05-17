@@ -24,7 +24,7 @@ desc "Import invoice items from csv"
  task :invoice_items => :environment do
    InvoiceItem.destroy_all
    filename = File.join Rails.root, "/csv/invoice_items.csv"
-   ActiveRecord::Base.connection.execute("TRUNCATE TABLE INVOICEITEMS RESTART IDENTITY")
+   ActiveRecord::Base.connection.execute("TRUNCATE TABLE INVOICE_ITEMS RESTART IDENTITY")
 
    CSV.foreach(filename, headers: true) do |row|
      InvoiceItem.create({item_id: row["item_id"],
@@ -67,7 +67,6 @@ desc "Import invoice items from csv"
       CSV.foreach(filename, headers: true) do |row|
         Merchant.create({name: row["name"]})
       end
-      require "pry"; binding.pry
     end
 
     desc "Import transactions from csv"

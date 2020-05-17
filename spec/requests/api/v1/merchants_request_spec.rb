@@ -60,7 +60,17 @@ describe "Merchants API" do
     expect(merchant_items["data"].count).to eq(3)
     expect(merchant_items.has_key?("data")).to eq(true)
     expect(merchant_items.is_a? Hash).to eq(true)
+  end
 
+  it "can find a merchant by a search parameter" do
+    merchant1 = create(:merchant, name: "Izzy's Ice Cream")
+    merchant2 = create(:merchant, name: "Creamsicle Shop")
+    merchant3 = create(:merchant, name: "Al's Burgers")
+
+    get "/api/v1/merchants/find?name=cream&updated_at=#{merchant1.updated_at}"
+    expect(response).to be_successful
+    merchant = JSON.parse(response.body)
+    expect(merchant["data"]["id"]).to eq(merchant1.id.to_s)
   end
 
 end
