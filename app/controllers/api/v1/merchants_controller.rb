@@ -6,13 +6,13 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def create
+    require "pry"; binding.pry
     @merchant = Merchant.create(merchant_params)
     render json: MerchantSerializer.new(@merchant).serializable_hash
   end
 
   def destroy
     @merchant = Merchant.find(params["id"])
-    require "pry"; binding.pry
     render json: MerchantSerializer.new(@merchant.delete).serializable_hash
   end
 
