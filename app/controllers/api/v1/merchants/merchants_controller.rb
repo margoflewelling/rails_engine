@@ -1,4 +1,4 @@
-class Api::V1::MerchantsController < ApplicationController
+class Api::V1::Merchants::MerchantsController < ApplicationController
 
   def index
     @data = Merchant.all
@@ -6,7 +6,6 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def create
-    require "pry"; binding.pry
     @merchant = Merchant.create(merchant_params)
     render json: MerchantSerializer.new(@merchant).serializable_hash
   end
@@ -23,7 +22,7 @@ class Api::V1::MerchantsController < ApplicationController
 private
 
   def merchant_params
-    params.require(:merchant).permit(:name)
+    params.permit(:name)
   end
 
 end

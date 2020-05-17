@@ -11,36 +11,40 @@ describe "Items API" do
     expect(items.is_a? Hash).to eq(true)
   end
 
-  xit "can show a specific merchant" do
-    id = create(:merchant).id
-    get "/api/v1/merchants/#{id}"
-    merchant = JSON.parse(response.body)
+  it "can show a specific item" do
+    id = create(:item).id
+    get "/api/v1/items/#{id}"
+    item = JSON.parse(response.body)
     expect(response).to be_successful
-    expect(merchant["data"]["id"]).to eq(id.to_s)
+    expect(item["data"]["id"]).to eq(id.to_s)
   end
 
-  xit "can create a new merchant" do
-    merchant_params = {name: "Billy Bob"}
-    post "/api/v1/merchants", params: {merchant: merchant_params}
-    merchant = Merchant.last
-    expect(response).to be_successful
-    expect(merchant.name). to eq(merchant_params[:name])
-  end
-
-  xit "can destroy a merchant" do
+  it "can create a new item" do
     merchant = create(:merchant)
-    expect(Merchant.count).to eq(1)
-    expect{ delete "/api/v1/merchants/#{merchant.id}" }.to change(Merchant, :count).by(-1)
+    item_params = {name: "Paddleboard",
+                   description: "Enjoy your summer on the water",
+                   unit_price: 110.99,
+                   merchant_id: merchant.id}
+    post "/api/v1/items", params: item_params
+    item = Item.last
     expect(response).to be_successful
-    expect{Merchant.find(merchant.id)}.to raise_error(ActiveRecord::RecordNotFound)
+    expect(item.name). to eq(item_params[:name])
   end
 
-  xit "can update a merchant" do
-    merchant = create(:merchant)
-    original_name = merchant.name
-    merchant_params = {name: "Izzy's IceCream"}
-    put "/api/v1/merchants/#{merchant.id}", params: {merchant: merchant_params}
-    updated = Merchant.find_by(id: merchant.id)
+  it "can destroy an item" do
+    item = create(:item)
+    expect(Item.count).to eq(1)
+    expect{ delete "/api/v1/items/#{item.id}" }.to change(Item, :count).by(-1)
+    expect(response).to be_successful
+    expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
+  end
+
+  it "can update an item" do
+    item = create(:item)
+    original_name = item.name
+    item_params = {name: "Izzy's IceCream"}
+    put "/api/v1/items/#{item.id}", params: item_params
+    updated = Item.find_by(id: item.id)
     expect(response).to be_successful
     expect(updated.name).to_not eq(original_name)
     expect(updated.name).to eq("Izzy's IceCream")
