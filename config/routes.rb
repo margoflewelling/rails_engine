@@ -20,6 +20,7 @@ namespace :api do
      delete ':id', to: 'items#destroy'
      put ':id', to: 'items#update'
      patch ':id', to: 'items#update'
+     get ':id/merchant', to: 'merchants#show'
 
    end
 

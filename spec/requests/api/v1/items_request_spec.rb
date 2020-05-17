@@ -49,4 +49,14 @@ describe "Items API" do
     expect(updated.name).to_not eq(original_name)
     expect(updated.name).to eq("Izzy's IceCream")
   end
+
+  it "can get the merchant associated with the item" do
+    merchant1 = create(:merchant)
+    merchant2 = create(:merchant)
+    item = create(:item, merchant_id: merchant1.id)
+    get "/api/v1/items/#{item.id}/merchant"
+    merchant = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(merchant["data"]["id"]).to eq(merchant1.id.to_s)
+  end
 end
