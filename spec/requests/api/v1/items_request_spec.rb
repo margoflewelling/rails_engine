@@ -2,7 +2,12 @@ require 'rails_helper'
 
 describe "Items API" do
   it "sends a list of all items" do
-    create_list(:item, 5)
+    create(:merchant, id: 4)
+    create(:item, merchant_id: 4)
+    create(:item, merchant_id: 4)
+    create(:item, merchant_id: 4)
+    create(:item, merchant_id: 4)
+    create(:item, merchant_id: 4)
     get '/api/v1/items'
     expect(response).to be_successful
     items = JSON.parse(response.body)
@@ -12,7 +17,8 @@ describe "Items API" do
   end
 
   it "can show a specific item" do
-    id = create(:item).id
+    create(:merchant, id: 2)
+    id = create(:item, merchant_id: 2).id
     get "/api/v1/items/#{id}"
     item = JSON.parse(response.body)
     expect(response).to be_successful
@@ -32,7 +38,8 @@ describe "Items API" do
   end
 
   it "can destroy an item" do
-    item = create(:item)
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
     expect(Item.count).to eq(1)
     expect{ delete "/api/v1/items/#{item.id}" }.to change(Item, :count).by(-1)
     expect(response).to be_successful
@@ -40,7 +47,8 @@ describe "Items API" do
   end
 
   it "can update an item" do
-    item = create(:item)
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
     original_name = item.name
     item_params = {name: "Izzy's IceCream"}
     put "/api/v1/items/#{item.id}", params: item_params
@@ -61,6 +69,9 @@ describe "Items API" do
   end
 
   it "can find an item by a search parameter" do
+    merchant1 = create(:merchant, id: 3)
+    merchant2 = create(:merchant, id: 2)
+    merchant2 = create(:merchant, id: 8)
     item1 = create(:item, name: "Denim Overalls", merchant_id: 8)
     item2 = create(:item, name: "Paddleboard", merchant_id: 2)
     item3 = create(:item, name: "Cutting board", merchant_id: 3)
@@ -71,6 +82,9 @@ describe "Items API" do
   end
 
   it "can find all items matching search params" do
+    merchant1 = create(:merchant, id: 3)
+    merchant2 = create(:merchant, id: 2)
+    merchant2 = create(:merchant, id: 8)
     item1 = create(:item, name: "Denim Overalls", merchant_id: 8)
     item2 = create(:item, name: "Paddleboard", merchant_id: 2)
     item3 = create(:item, name: "Cutting board", merchant_id: 3)
