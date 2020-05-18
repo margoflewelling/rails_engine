@@ -1,37 +1,25 @@
 class Api::V1::Items::SearchController < ApplicationController
 
-def find
-  possible_items = check_params(params)
-  items = (possible_items.detect{ |item| possible_items.count(item) == @query_params })
-  render json: ItemSerializer.new(items).serialized_json
-end
-
-def find_all
-  possible_items = check_params(params)
-  items = possible_items.select{ |item| possible_items.count(item) == @query_params }.uniq
-  render json: ItemSerializer.new(items).serialized_json
-end
-
-private
-
-def check_params(params)
-  @query_params = 0
-  possible_items = []
-  params.each do |key, value|
-    if item_attributes.include?(key)
-      @query_params += 1
-      if value.to_i != 0
-        possible_items << Item.where("#{key}": value.to_i)
-      else
-        possible_items << Item.where("lower(#{key}) like ?", "%#{value.downcase}%")
-      end
-    end
+  def find
+    items = check_params(params)
+    render json: ItemSerializer.new(items.first).serialized_json
   end
-  possible_items.flatten
-end
 
-def item_attributes
-  ["name", "description", "unit_price", "merchant_id", "created_at", "updated_at"]
-end
+  def find_all
+    items = check_params(params)
+    render json: ItemSerializer.new(items).serialized_json
+  end
+
+  private
+
+  def check_params(params)
+    items = Item.all
+    items = items.filter_by_name(params[:name]) if params[:name].present?
+    items = items.filter_by_id(params[:id]) if params[:id].present?
+    items = items.filter_by_description(params[:description]) if params[:description].present?
+    items = items.filter_by_unit_price(params[:unit_price]) if params[:unit_price].present?
+    items = items.filter_by_merchant_id(params[:merchant_id]) if params[:merchant_id].present?
+    items
+  end
 
 end

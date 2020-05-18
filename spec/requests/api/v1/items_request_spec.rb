@@ -78,6 +78,7 @@ describe "Items API" do
     get "/api/v1/items/find?name=board&merchant_id=3"
     expect(response).to be_successful
     item = JSON.parse(response.body)
+    require "pry"; binding.pry
     expect(item["data"]["id"]).to eq(item3.id.to_s)
   end
 
