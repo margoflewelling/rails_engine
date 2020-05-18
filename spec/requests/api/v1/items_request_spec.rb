@@ -60,7 +60,7 @@ describe "Items API" do
     expect(merchant["data"]["id"]).to eq(merchant1.id.to_s)
   end
 
-  xit "can find an item by a search parameter" do
+  it "can find an item by a search parameter" do
     item1 = create(:item, name: "Denim Overalls", merchant_id: 8)
     item2 = create(:item, name: "Paddleboard", merchant_id: 2)
     item3 = create(:item, name: "Cutting board", merchant_id: 3)

@@ -3,7 +3,7 @@ class Api::V1::Items::SearchController < ApplicationController
 def find
   possible_items = check_params(params)
   @items = (possible_items.select{ |item| possible_items.count(item) == @query_params }).uniq
-  render json: ItemSerializer.new(@items).serializable_hash
+  render json: ItemSerializer.new(@items).serialized_json
 end
 
 private
