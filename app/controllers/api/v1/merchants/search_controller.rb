@@ -1,10 +1,5 @@
 class Api::V1::Merchants::SearchController < ApplicationController
 
-  def show
-    @merchant = Merchant.find(params["id"])
-    render json: MerchantSerializer.new(@merchant).serializable_hash
-  end
-
   def find
     possible_merchants = check_params(params)
     @merchant = possible_merchants.detect{ |merchant| possible_merchants.count(merchant) == @query_params }

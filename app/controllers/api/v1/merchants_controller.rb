@@ -1,8 +1,13 @@
-class Api::V1::Merchants::MerchantsController < ApplicationController
+class Api::V1::MerchantsController < ApplicationController
 
   def index
     @data = Merchant.all
     render json: MerchantSerializer.new(@data).serializable_hash
+  end
+
+  def show
+    @merchant = Merchant.find(params["id"])
+    render json: MerchantSerializer.new(@merchant).serializable_hash
   end
 
   def create

@@ -59,4 +59,15 @@ describe "Items API" do
     expect(response).to be_successful
     expect(merchant["data"]["id"]).to eq(merchant1.id.to_s)
   end
+
+  xit "can find an item by a search parameter" do
+    item1 = create(:item, name: "Denim Overalls", merchant_id: 8)
+    item2 = create(:item, name: "Paddleboard", merchant_id: 2)
+    item3 = create(:item, name: "Cutting board", merchant_id: 3)
+    get "/api/v1/items/find?name=board&merchant_id=3"
+    expect(response).to be_successful
+    item = JSON.parse(response.body)
+    expect(item["data"].first["id"]).to eq(item3.id.to_s)
+  end
+
 end
