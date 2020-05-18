@@ -2,8 +2,14 @@ class Api::V1::Items::SearchController < ApplicationController
 
 def find
   possible_items = check_params(params)
-  @items = (possible_items.select{ |item| possible_items.count(item) == @query_params }).uniq
-  render json: ItemSerializer.new(@items).serialized_json
+  items = (possible_items.detect{ |item| possible_items.count(item) == @query_params })
+  render json: ItemSerializer.new(items).serialized_json
+end
+
+def find_all
+  possible_items = check_params(params)
+  items = possible_items.select{ |item| possible_items.count(item) == @query_params }.uniq
+  render json: ItemSerializer.new(items).serialized_json
 end
 
 private

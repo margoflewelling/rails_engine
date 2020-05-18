@@ -67,7 +67,25 @@ describe "Items API" do
     get "/api/v1/items/find?name=board&merchant_id=3"
     expect(response).to be_successful
     item = JSON.parse(response.body)
-    expect(item["data"].first["id"]).to eq(item3.id.to_s)
+    expect(item["data"]["id"]).to eq(item3.id.to_s)
+  end
+
+  it "can find all items matching search params" do
+    item1 = create(:item, name: "Denim Overalls", merchant_id: 8)
+    item2 = create(:item, name: "Paddleboard", merchant_id: 2)
+    item3 = create(:item, name: "Cutting board", merchant_id: 3)
+
+    get "/api/v1/items/find_all?name=board"
+    expect(response).to be_successful
+    items = JSON.parse(response.body)
+
+    expect(items["data"].count).to eq(2)
+    names = items["data"].map do |item|
+      item["attributes"]["name"].downcase
+    end
+    names.each do |name|
+      expect(name).to include('board')
+    end
   end
 
 end

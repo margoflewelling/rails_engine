@@ -1,8 +1,8 @@
 class Api::V1::ItemsController < ApplicationController
 
   def index
-    @data = Item.all
-    render json: ItemSerializer.new(@data).serialized_json
+    data = Item.all
+    render json: ItemSerializer.new(data).serialized_json
   end
 
   def show
@@ -11,13 +11,13 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.create(item_params)
-    render json: ItemSerializer.new(@item).serialized_json
+    item = Item.create(item_params)
+    render json: ItemSerializer.new(item).serialized_json
   end
 
   def destroy
-    @item = Item.find(params["id"])
-    render json: ItemSerializer.new(@item.delete).serialized_json
+    item = Item.find(params["id"])
+    render json: ItemSerializer.new(item.delete).serialized_json
   end
 
   def update

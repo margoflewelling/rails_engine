@@ -2,8 +2,14 @@ class Api::V1::Merchants::SearchController < ApplicationController
 
   def find
     possible_merchants = check_params(params)
-    @merchant = possible_merchants.detect{ |merchant| possible_merchants.count(merchant) == @query_params }
-    render json: MerchantSerializer.new(@merchant).serialized_json
+    merchant = possible_merchants.detect{ |merchant| possible_merchants.count(merchant) == @query_params }
+    render json: MerchantSerializer.new(merchant).serialized_json
+  end
+
+  def find_all
+    possible_merchants = check_params(params)
+    merchants = possible_merchants.select{ |merchant| possible_merchants.count(merchant) == @query_params }.uniq
+    render json: MerchantSerializer.new(merchants).serialized_json
   end
 
   private
@@ -23,7 +29,7 @@ class Api::V1::Merchants::SearchController < ApplicationController
 
 
   def merchant_attributes
-    ["name", "created_at", "updated_at"]
+    ["name", "created_at", "updated_at", "id"]
   end
 
 end

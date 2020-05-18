@@ -73,4 +73,22 @@ describe "Merchants API" do
     expect(merchant["data"]["id"]).to eq(merchant1.id.to_s)
   end
 
+  it "can find all merchants matching params" do
+    merchant1 = create(:merchant, name: "Izzy's Ice Cream")
+    merchant2 = create(:merchant, name: "Creamsicle Shop")
+    merchant3 = create(:merchant, name: "Al's Burgers")
+
+    get "/api/v1/merchants/find_all?name=cream"
+    expect(response).to be_successful
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(2)
+    names = merchants["data"].map do |merchant|
+      merchant["attributes"]["name"].downcase
+    end
+    names.each do |name|
+      expect(name).to include('cream')
+    end
+  end
+
 end
