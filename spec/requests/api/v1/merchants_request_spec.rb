@@ -101,7 +101,7 @@ describe "Merchants API" do
     end
   end
 
-  xit "can get merchants with most revenue" do
+  it "can get merchants with most revenue" do
     customer = create(:customer)
     merchant1 = create(:merchant)
     merchant2 = create(:merchant)
@@ -128,8 +128,65 @@ describe "Merchants API" do
     expect(response).to be_successful
     merchants = JSON.parse(response.body)
     expect(merchants["data"].count).to eq(2)
-    expect(merchants["data"].first["id"]).to eq(merchant3.id)
-    expect(merchants["data"].last["id"]).to eq(merchant2.id)
+    expect(merchants["data"].first["id"]).to eq(merchant3.id.to_i)
+    expect(merchants["data"].last["id"]).to eq(merchant2.id.to_i)
   end
+
+  xit "can get merchants with most items" do
+    customer = create(:customer)
+    merchant1 = create(:merchant)
+    merchant2 = create(:merchant)
+    merchant3 = create(:merchant)
+    merchant4 = create(:merchant)
+
+    invoice1 = create(:invoice, merchant_id: merchant1.id, customer_id: customer.id)
+    invoice2 = create(:invoice, merchant_id: merchant2.id, customer_id: customer.id)
+    invoice3 = create(:invoice, merchant_id: merchant2.id, customer_id: customer.id)
+    invoice4 = create(:invoice, merchant_id: merchant3.id, customer_id: customer.id)
+    invoice5 = create(:invoice, merchant_id: merchant4.id, customer_id: customer.id)
+    item = create(:item, merchant_id: merchant1.id, id: 1)
+    invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, quantity: 3 , unit_price: 10, item_id: 1)
+    invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, quantity: 3 , unit_price: 20, item_id: 1)
+    invoice_item3 = create(:invoice_item, invoice_id: invoice3.id, quantity: 1 , unit_price: 30, item_id: 1)
+    invoice_item4 = create(:invoice_item, invoice_id: invoice4.id, quantity: 3 , unit_price: 50, item_id: 1)
+    invoice_item5 = create(:invoice_item, invoice_id: invoice4.id, quantity: 3 , unit_price: 25, item_id: 1)
+    invoice_item6 = create(:invoice_item, invoice_id: invoice5.id, quantity: 5 , unit_price: 100, item_id: 1)
+    transaction1 = create(:transaction, invoice_id: invoice4.id )
+    transaction2 = create(:transaction, invoice_id: invoice3.id)
+    transaction3 = create(:transaction, invoice_id: invoice5.id, result: "failed")
+    transaction4 = create(:transaction, invoice_id: invoice2.id)
+    get '/api/v1/merchants/most_items?quantity=1'
+    expect(response).to be_successful
+    merchants = JSON.parse(response.body)
+    expect(merchants["data"].count).to eq(4)
+    expect(merchants["data"].first["id"]).to eq(merchant3.id.to_i)
+    expect(merchants["data"].last["id"]).to eq(merchant4.id.to_i)
+  end
+
+  it "can get revenue for a merchant" do
+    merchant1 = create(:merchant)
+    merchant2 = create(:merchant)
+    customer = create(:customer)
+    invoice1 = create(:invoice, merchant_id: merchant1.id, customer_id: customer.id)
+    invoice2 = create(:invoice, merchant_id: merchant1.id, customer_id: customer.id)
+    invoice3 = create(:invoice, merchant_id: merchant2.id, customer_id: customer.id)
+    item = create(:item, merchant_id: merchant1.id, id: 1)
+    invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, quantity: 3 , unit_price: 10, item_id: 1)
+    invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, quantity: 3 , unit_price: 20, item_id: 1)
+    invoice_item3 = create(:invoice_item, invoice_id: invoice3.id, quantity: 1 , unit_price: 30, item_id: 1)
+    transaction1 = create(:transaction, invoice_id: invoice1.id )
+    transaction2 = create(:transaction, invoice_id: invoice2.id)
+    transaction3 = create(:transaction, invoice_id: invoice3.id)
+    get "/api/v1/merchants/#{merchant1.id}/revenue"
+    expect(response).to be_successful
+    merchants = JSON.parse(response.body)
+    expect(merchants["data"]["id"]).to eq(merchant1.id)
+    expect(merchants["data"]["attributes"]["revenue"]).to eq(90)
+  end
+
+
+
+
+
 
 end
