@@ -18,11 +18,15 @@ ActiveRecord::Schema.define(version: 2020_05_18_200749) do
   create_table "customers", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "invoice_items", force: :cascade do |t|
     t.integer "quantity"
     t.float "unit_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "item_id"
     t.bigint "invoice_id"
     t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id"
@@ -31,6 +35,8 @@ ActiveRecord::Schema.define(version: 2020_05_18_200749) do
 
   create_table "invoices", force: :cascade do |t|
     t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "merchant_id"
     t.bigint "customer_id"
     t.index ["customer_id"], name: "index_invoices_on_customer_id"
@@ -41,22 +47,24 @@ ActiveRecord::Schema.define(version: 2020_05_18_200749) do
     t.string "name"
     t.string "description"
     t.float "unit_price"
-    t.string "updated_at"
-    t.string "created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "merchant_id"
     t.index ["merchant_id"], name: "index_items_on_merchant_id"
   end
 
   create_table "merchants", force: :cascade do |t|
     t.string "name"
-    t.string "updated_at"
-    t.string "created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "transactions", force: :cascade do |t|
     t.string "credit_card_number"
     t.string "credit_card_expiration_date"
     t.string "result"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "invoice_id"
     t.index ["invoice_id"], name: "index_transactions_on_invoice_id"
   end
