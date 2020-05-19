@@ -78,7 +78,6 @@ describe "Items API" do
     get "/api/v1/items/find?name=board&merchant_id=3"
     expect(response).to be_successful
     item = JSON.parse(response.body)
-    require "pry"; binding.pry
     expect(item["data"]["id"]).to eq(item3.id.to_s)
   end
 
@@ -101,6 +100,21 @@ describe "Items API" do
     names.each do |name|
       expect(name).to include('board')
     end
+  end
+
+  it "can search with a date parameter to find items" do
+    merchant = create(:merchant, id: 1)
+    merchant = create(:merchant, id: 2)
+    item1 = create(:item, created_at: "2015-03-27", merchant_id: 2)
+    item2 = create(:item, created_at: "2012-03-27", merchant_id: 1)
+    item3 = create(:item, created_at: "2012-03-27", merchant_id: 1)
+    item4 = create(:item, created_at: "2012-07-20", merchant_id: 1)
+    item5 = create(:item, created_at: "2012-05-01", merchant_id: 2)
+
+    get "/api/v1/merchants/find_all?created_at=2012-03-27&merchant_id=1"
+    expect(response).to be_successful
+    merchant = JSON.parse(response.body)
+    expect(merchant["data"].count).to eq(2)
   end
 
 end
