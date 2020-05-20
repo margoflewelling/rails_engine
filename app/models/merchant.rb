@@ -4,6 +4,8 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :invoice_items, through: :invoices
 
+  validates :name, presence: true
+
   scope :filter_by_name, -> (name) { where("lower(name) like ?", "%#{name.downcase}%")}
   scope :filter_by_id, -> (id) { where id: id }
   scope :filter_by_created_at, -> (created_at) { where("created_at like ?", "#{created_at}%")}
