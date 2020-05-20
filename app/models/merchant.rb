@@ -1,8 +1,8 @@
 class Merchant < ApplicationRecord
   has_many :items
   has_many :invoices
-  has_many :invoice_items, through: :invoices
   has_many :transactions, through: :invoices
+  has_many :invoice_items, through: :invoices
 
   scope :filter_by_name, -> (name) { where("lower(name) like ?", "%#{name.downcase}%")}
   scope :filter_by_id, -> (id) { where id: id }
@@ -11,28 +11,40 @@ class Merchant < ApplicationRecord
 
 
   def self.most_revenue(limit)
-    select("merchants.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue")
-      .joins(:invoices, :invoice_items, :transactions)
-      .group(:id)
+      Merchant.joins(:invoice_items, :transactions)
       .merge(Transaction.successful)
+      .group(:id)
+      .select("merchants.*, sum(invoice_items.unit_price * invoice_items.quantity) AS revenue")
       .order("revenue DESC")
       .limit(limit)
   end
 
+  # .joins(:invoice_items, :transactions)
+# A paid invoice has at least one successful transaction.
+# get rid of invoices that have all failed transactions.
+
   def self.most_items(limit)
     select("merchants.*, SUM(invoice_items.quantity) AS total_items_sold")
-      .joins(:invoices, :invoice_items, :transactions)
+      .joins(:invoice_items, :transactions)
+      .merge(Transaction.successful)
       .group(:id)
-      .where(transactions: {result: "success"})
       .order("total_items_sold DESC")
       .limit(limit)
   end
 
-  def revenue
-    select("merchants.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue")
-      .joins(:invoices, :invoice_items, :transactions)
+  def merchant_revenue(merchant_id)
+    Merchant.select("merchants.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue")
+      .joins(:invoice_items, :transactions)
       .group(:id)
-      .where(transactions: {result: "success"}, id: self.id)
+      .merge(Transaction.successful)
+      .where(id: merchant_id)
+  end
+
+  def revenue_between_dates(date1, date2)
+    Invoice.select("invoices.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
+    .joins(:invoice_items, :transactions)
+    .where(transactions: {result: "success"})
+    .group(:id)
   end
 
 end

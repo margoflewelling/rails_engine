@@ -1,4 +1,4 @@
-class MerchantSerializer < ActiveModel::Serializer
+class MerchantRevenueSerializer < ActiveModel::Serializer
   include FastJsonapi::ObjectSerializer
-  attributes :id, :revenue
+  attributes :revenue
 end
