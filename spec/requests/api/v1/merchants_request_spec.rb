@@ -196,7 +196,6 @@ describe "Merchants API" do
     get "/api/v1/revenue?start=2012-03-09&end=2012-03-24"
     expect(response).to be_successful
     revenue = JSON.parse(response.body)
-    expect(revenue["data"]["id"]).to eq(merchant1.id)
     expect(revenue["data"]["attributes"]["revenue"]).to eq(60)
   end
 

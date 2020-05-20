@@ -13,7 +13,9 @@ class Api::V1::Merchants::StatsController < ApplicationController
   def revenue
     merchant = Merchant.find(params["id"])
     merch = merchant.merchant_revenue(merchant.id)
-    render json: MerchantRevenueSerializer.new(merch.first).serialized_json
+    render json: RevenueSerializer.new(merch.first).serialized_json
   end
+
+
 
 end
