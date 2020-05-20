@@ -179,29 +179,24 @@ describe "Merchants API" do
     expect(revenue["data"]["attributes"]["revenue"]).to eq(90)
   end
 
-  xit "can get all revenue for all merchants across date range" do
+  it "can get all revenue for all merchants across date range" do
     merchant1 = create(:merchant)
     merchant2 = create(:merchant)
     customer = create(:customer)
-    invoice1 = create(:invoice, merchant_id: merchant1.id, customer_id: customer.id)
-    invoice2 = create(:invoice, merchant_id: merchant1.id, customer_id: customer.id)
-    invoice3 = create(:invoice, merchant_id: merchant2.id, customer_id: customer.id)
+    invoice1 = create(:invoice, merchant_id: merchant1.id, customer_id: customer.id, created_at: "2012-03-10 14:53:59 UTC")
+    invoice2 = create(:invoice, merchant_id: merchant1.id, customer_id: customer.id, created_at: "2012-04-08 14:53:59 UTC")
+    invoice3 = create(:invoice, merchant_id: merchant2.id, customer_id: customer.id, created_at: "2012-03-20 14:53:59 UTC")
     item = create(:item, merchant_id: merchant1.id, id: 1)
     invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, quantity: 3 , unit_price: 10, item_id: 1)
     invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, quantity: 4 , unit_price: 20, item_id: 1)
     invoice_item3 = create(:invoice_item, invoice_id: invoice3.id, quantity: 1 , unit_price: 30, item_id: 1)
-    transaction1 = create(:transaction, invoice_id: invoice1.id, created_at: "2012-03-10 14:53:59 UTC")
-    transaction2 = create(:transaction, invoice_id: invoice2.id, created_at: "2012-04-08 14:53:59 UTC")
-    transaction3 = create(:transaction, invoice_id: invoice3.id, created_at: "2012-03-20 14:53:59 UTC")
+    transaction1 = create(:transaction, invoice_id: invoice1.id)
+    transaction2 = create(:transaction, invoice_id: invoice2.id)
+    transaction3 = create(:transaction, invoice_id: invoice3.id)
     get "/api/v1/revenue?start=2012-03-09&end=2012-03-24"
     expect(response).to be_successful
     revenue = JSON.parse(response.body)
     expect(revenue["data"]["attributes"]["revenue"]).to eq(60)
   end
-
-
-
-
-
-
+  
 end

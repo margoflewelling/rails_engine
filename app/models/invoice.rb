@@ -7,9 +7,7 @@ class Invoice < ApplicationRecord
 
 
   def self.revenue_between(start_date, end_date)
-    Invoice.select("invoice.id")
-           .includes(:invoice_items)
-           .joins(:transactions)
+    Invoice.joins(:invoice_items, :transactions)
            .merge(Transaction.successful)
            .where(invoices: { created_at: start_date .. end_date})
            .sum("invoice_items.unit_price * invoice_items.quantity")
@@ -17,6 +15,3 @@ class Invoice < ApplicationRecord
   end
 
 end
-
-# Invoice.includes(:invoice_items).joins(:transactions).merge(Transaction.successful).count
-# Invoice.includes(:invoice_items).sum("invoice_items.unit_price * invoice_items.quantity")
