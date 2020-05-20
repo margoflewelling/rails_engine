@@ -8,4 +8,5 @@ class Transaction < ApplicationRecord
   validates :invoice_id, presence: true
 
   scope :successful, -> { where(result: "success") }
+  
 end

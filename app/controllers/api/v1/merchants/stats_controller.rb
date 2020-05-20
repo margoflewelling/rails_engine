@@ -16,6 +16,4 @@ class Api::V1::Merchants::StatsController < ApplicationController
     render json: RevenueSerializer.new(merch.first).serialized_json
   end
 
-
-
 end
