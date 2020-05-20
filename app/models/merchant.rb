@@ -11,17 +11,13 @@ class Merchant < ApplicationRecord
 
 
   def self.most_revenue(limit)
-      Merchant.joins(:invoice_items, :transactions)
+      Merchant.select("merchants.*, sum(invoice_items.unit_price * invoice_items.quantity) AS revenue")
+      .joins(:invoice_items, :transactions)
       .merge(Transaction.successful)
       .group(:id)
-      .select("merchants.*, sum(invoice_items.unit_price * invoice_items.quantity) AS revenue")
       .order("revenue DESC")
       .limit(limit)
   end
-
-  # .joins(:invoice_items, :transactions)
-# A paid invoice has at least one successful transaction.
-# get rid of invoices that have all failed transactions.
 
   def self.most_items(limit)
     select("merchants.*, SUM(invoice_items.quantity) AS total_items_sold")
@@ -34,7 +30,7 @@ class Merchant < ApplicationRecord
 
   def merchant_revenue(merchant_id)
     Merchant.select("merchants.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue")
-      .joins(:invoice_items, :transactions)
+      .joins(invoices: [:invoice_items, :transactions])
       .group(:id)
       .merge(Transaction.successful)
       .where(id: merchant_id)
