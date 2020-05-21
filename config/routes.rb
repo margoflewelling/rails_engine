@@ -3,12 +3,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
 
-      get 'revenue', to: 'revenue#dates'
+      get 'revenue', to: 'revenue#show'
 
       namespace :merchants do
 
-        get 'find_all', to: 'search#find_all'
-        get 'find', to: 'search#find'
+        get 'find_all', to: 'search#index'
+        get 'find', to: 'search#show'
 
         get 'most_items', to: 'stats#merchants_most_items'
         get 'most_revenue', to: 'stats#merchants_most_revenue'
@@ -19,9 +19,9 @@ Rails.application.routes.draw do
       resources :merchants, except: [:new, :edit]
 
      namespace :items do
-       
-       get 'find_all', to: 'search#find_all'
-       get 'find', to: 'search#find'
+
+       get 'find_all', to: 'search#index'
+       get 'find', to: 'search#show'
 
        get ':id/merchant', to: 'merchants#show'
      end

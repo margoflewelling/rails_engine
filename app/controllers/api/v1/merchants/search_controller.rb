@@ -1,11 +1,11 @@
 class Api::V1::Merchants::SearchController < ApplicationController
 
-  def find
+  def show
     merchants = check_params(params)
     render json: MerchantSerializer.new(merchants.first).serialized_json
   end
 
-  def find_all
+  def index
     merchants = check_params(params)
     render json: MerchantSerializer.new(merchants).serialized_json
   end
