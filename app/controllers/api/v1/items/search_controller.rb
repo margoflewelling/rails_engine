@@ -1,5 +1,5 @@
 class Api::V1::Items::SearchController < ApplicationController
-
+  
   def find
     items = check_params(params)
     render json: ItemSerializer.new(items.first).serialized_json

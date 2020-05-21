@@ -5,6 +5,9 @@ class Invoice < ApplicationRecord
   has_many :items, through: :invoice_items
   has_many :transactions
 
+  validates :status, presence: true
+  validates :merchant_id, presence: true
+  validates :customer_id, presence: true
 
   def self.revenue_between(start_date, end_date)
     Invoice.joins(:invoice_items, :transactions)

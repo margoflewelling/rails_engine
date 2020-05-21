@@ -1,24 +1,33 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+How to get RailsEngine started:
 
-Things you may want to cover:
+* Ruby version: 2.5.3
 
-* Ruby version
+* Configuration:  Bundle install
 
-* System dependencies
+* Database creation:  Run: rails db:create
+                           rails db:migrate
+                           rake task:all     -- to import csv files into the database
 
-* Configuration
 
-* Database creation
+* How to run the test suite:  Bundle exec rspec, all api call testing is in the spec/requests folder
 
-* Database initialization
+* Services
 
-* How to run the test suite
+     Front end (Rails Driver) of this project lives here:
+                    https://github.com/turingschool-examples/rails_driver
+     Rails Engine builds a commerce api for rails driver to use.
+     Rails engine has the following paths built in:
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+        All crud functionality for both Merchants and Items
+        Find 1 or multiple Merchants or Items through query params
+             GET api/v1/merchants/find?name=ring&description=capitol
+        Returns merchants with most revenue
+             GET /api/v1/merchants/most_revenue?quantity=x
+        Returns merchants with most items sold
+             GET /api/v1/merchants/most_items?quantity=x
+        Returns all revenue generated between two dates
+             GET /api/v1/revenue?start=<start_date>&end=<end_date>
+        Returns total revenue for a single merchant
+             GET /api/v1/merchants/:id/revenue
